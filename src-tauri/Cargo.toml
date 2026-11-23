@@ -1,0 +1,31 @@
+[package]
+name = "worth-remembering"
+version = "1.0.0"
+description = "A private, local-first personal asset journal"
+edition = "2021"
+rust-version = "1.77"
+
+[lib]
+name = "worth_remembering_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio-rustls", "sqlite", "derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "2"
+tracing = "0.1"
+base64 = "0.22"
+argon2 = "0.5"
+password-hash = { version = "0.5", features = ["rand_core"] }
+rand_core = { version = "0.6", features = ["getrandom"] }
+uuid = { version = "1", features = ["v4"] }
+
+[dev-dependencies]
+tempfile = "3"

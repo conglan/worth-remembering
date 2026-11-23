@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "值得记",
+    "version": "1.0.0",
+  "identifier": "com.worthremembering.desktop",
+  "build": {
+    "beforeDevCommand": "npm run build",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "值得记 · 个人资产管理",
+        "width": 1440,
+        "height": 960,
+        "minWidth": 960,
+        "minHeight": 700,
+        "resizable": true,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": ["icons/icon.ico", "icons/icon.png"],
+    "copyright": "Copyright © 2026",
+    "category": "Utility",
+    "shortDescription": "本地优先的个人资产管理应用"
+  }
+}

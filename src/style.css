@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "SF Pro Display", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --color-ink: #202821;
+  --color-muted: #7a8078;
+  --color-canvas: #f5f6f2;
+  --color-forest: #284d3b;
+  --color-forest-dark: #1d3a2c;
+  --color-sage: #dfe8dc;
+  --color-line: #e6e8e1;
+  --color-warm: #f0eee7;
+}
+
+:root {
+  font-family: var(--font-sans);
+  color: #202821;
+  background: #f5f6f2;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --shadow-soft: 0 1px 2px rgb(24 42 30 / 0.02), 0 8px 28px rgb(24 42 30 / 0.035);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; min-height: 100vh; }
+button, input, select, textarea { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+::selection { background: #cfddca; color: #183626; }
+
+/* 隐藏 WebView2/Edge 自带的密码显示按钮，避免与自定义眼睛图标重复 */
+input[type='password']::-ms-reveal,
+input[type='password']::-ms-clear { display: none; }
+
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ced3c9; border-radius: 10px; }
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-line bg-white;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .btn-primary {
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-forest px-5 text-sm font-medium text-white transition-all duration-200 hover:bg-forest-dark hover:shadow-lg active:scale-[0.98] disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-line bg-white px-4 text-sm font-medium text-ink transition-all hover:border-[#c9d0c4] hover:bg-[#f8f9f6] active:scale-[0.98];
+  }
+
+  .icon-button {
+    @apply inline-flex size-9 shrink-0 items-center justify-center rounded-lg text-[#737b72] transition-colors hover:bg-[#eef1eb] hover:text-ink;
+  }
+
+  .field-label {
+    @apply mb-2 block text-[13px] font-medium text-[#4c554d];
+  }
+
+  .field-input {
+    @apply h-11 w-full rounded-xl border border-[#dfe3db] bg-[#fbfcf9] px-3.5 text-sm text-ink outline-none transition-all placeholder:text-[#a2a99f] hover:border-[#cbd2c6] focus:border-[#6f8d78] focus:bg-white focus:ring-4 focus:ring-[#284d3b]/[0.06];
+  }
+
+  textarea.field-input { @apply h-auto min-h-24 resize-none py-3 leading-6; }
+  select.field-input { @apply appearance-none pr-9; }
+
+  .eyebrow {
+    @apply text-[10px] font-semibold tracking-[0.2em] text-[#91988d] uppercase;
+  }
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
+
+.page-enter-active { transition: opacity 180ms ease, transform 240ms ease; }
+.page-leave-active { transition: opacity 120ms ease; }
+.page-enter-from { opacity: 0; transform: translateY(6px); }
+.page-leave-to { opacity: 0; }
+
+.modal-enter-active, .modal-leave-active { transition: opacity 200ms ease; }
+.modal-enter-active .modal-panel, .modal-leave-active .modal-panel { transition: opacity 220ms ease, transform 260ms cubic-bezier(.2,.8,.2,1); }
+.modal-enter-from, .modal-leave-to { opacity: 0; }
+.modal-enter-from .modal-panel, .modal-leave-to .modal-panel { opacity: 0; transform: translateY(14px) scale(.985); }
+
+.drawer-enter-active, .drawer-leave-active { transition: opacity 220ms ease; }
+.drawer-enter-active .drawer-panel, .drawer-leave-active .drawer-panel { transition: transform 300ms cubic-bezier(.2,.8,.2,1); }
+.drawer-enter-from, .drawer-leave-to { opacity: 0; }
+.drawer-enter-from .drawer-panel, .drawer-leave-to .drawer-panel { transform: translateX(100%); }
+
+.toast-enter-active, .toast-leave-active { transition: all 240ms ease; }
+.toast-enter-from, .toast-leave-to { opacity: 0; transform: translateY(-8px); }
+.toast-move { transition: transform 240ms ease; }
+
+@media (max-width: 767px) {
+  .modal-panel { max-height: 100dvh !important; height: 100dvh; border-radius: 0 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
