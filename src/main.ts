@@ -9,16 +9,6 @@ import './style.css'
 
 const pinia = createPinia()
 const mobile = isMobileDevice()
-
-/**
- * 从桌面图标启动的 PWA 是全屏的，iOS 会在状态栏那一条叠一层系统材质，
- * 顶栏配色需要单独处理（见 style.css 的 .is-standalone）。
- * 浏览器里带 ?standalone 参数可强制进入同一效果，方便对比调试。
- */
-const standaloneMode = window.matchMedia('(display-mode: standalone)').matches
-  || (navigator as Navigator & { standalone?: boolean }).standalone === true
-  || new URLSearchParams(window.location.search).has('standalone')
-if (standaloneMode) document.documentElement.classList.add('is-standalone')
 const app = createApp(mobile ? MobileApp : App)
 app.use(pinia)
 app.use(mobile ? mobileRouter : router)

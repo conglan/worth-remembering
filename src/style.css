@@ -158,28 +158,6 @@ input[type='password']::-ms-clear { display: none; }
 .page-enter-from { opacity: 0; }
 .page-leave-to { opacity: 0; }
 
-/**
- * 从桌面图标启动的 PWA 是全屏的（display-mode: standalone），
- * iOS 会在状态栏那一条叠一层系统材质，在浅色顶栏上就是一圈灰绿色暗晕；
- * 浏览器模式页面从工具栏下方开始，所以看不到。
- * 这层材质画在页面之上、CSS 删不掉，只能让深色把它吃掉。
- * .is-standalone 由 main.ts 根据 display-mode 或 ?standalone 参数打在 <html> 上。
- */
-.is-standalone .mobile-header {
-  background-color: var(--color-forest);
-  color: #fff;
-  border-bottom-color: transparent;
-}
-
-.is-standalone .mobile-header .header-logo {
-  background-color: var(--color-warm);
-  color: var(--color-forest);
-}
-
-.is-standalone .mobile-header .header-logout {
-  color: rgb(255 255 255 / 0.62);
-}
-
 .modal-enter-active, .modal-leave-active { transition: opacity 200ms ease; }
 .modal-enter-active .modal-panel, .modal-leave-active .modal-panel { transition: opacity 220ms ease, transform 260ms cubic-bezier(.2,.8,.2,1); }
 .modal-enter-from, .modal-leave-to { opacity: 0; }
