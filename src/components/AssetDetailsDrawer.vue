@@ -32,7 +32,7 @@ async function remove() {
     <Transition name="drawer">
       <div v-if="asset" class="fixed inset-0 z-[55] bg-[#17261d]/30 backdrop-blur-[2px]" @click="ui.detailsId = null">
         <aside class="drawer-panel ml-auto flex h-full w-full max-w-[440px] flex-col overflow-y-auto bg-[#fbfcf9] shadow-2xl" role="dialog" aria-modal="true" :aria-label="asset.name" @click.stop>
-          <header class="absolute top-0 right-0 left-0 z-10 flex items-center justify-between px-5 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-5">
+          <header class="absolute top-0 right-0 left-0 z-10 flex items-center justify-between px-5 pt-[calc(1.25rem+var(--safe-top))] pb-5">
             <span class="rounded-lg bg-white/90 px-3 py-1.5 text-[11px] font-medium shadow-sm backdrop-blur" :class="status === 'active' ? 'text-[#426c4d]' : status === 'retired' ? 'text-[#8a7042]' : 'text-[#6d756c]'">{{ statusLabel(status) }}</span>
             <button class="flex size-9 items-center justify-center rounded-xl bg-white/90 text-[#667064] shadow-sm backdrop-blur transition-colors hover:text-ink" aria-label="关闭详情" @click="ui.detailsId = null"><X :size="19" /></button>
           </header>
@@ -65,7 +65,7 @@ async function remove() {
 
             <div class="mt-5 flex items-center gap-2 rounded-xl bg-[#eef3ea] px-4 py-3 text-[10px] leading-5 text-[#7f8e79]"><Archive :size="15" class="shrink-0" />每日成本 = 购入价格 ÷ 总使用天数，购入当天计为第 1 天。</div>
           </div>
-          <footer class="sticky bottom-0 flex gap-3 border-t border-line bg-[#fbfcf9]/95 px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur sm:px-7">
+          <footer class="sticky bottom-0 flex gap-3 border-t border-line bg-[#fbfcf9]/95 px-6 pt-4 pb-[calc(1rem+var(--safe-bottom))] backdrop-blur sm:px-7">
             <button class="btn-secondary text-[#a25449] hover:border-[#e4c9c3] hover:bg-[#fcf4f2]" @click="confirmDelete = true"><Trash2 :size="15" />删除</button>
             <button class="btn-primary flex-1" @click="ui.openForm(asset.id)"><Pencil :size="15" />编辑资产<ArrowUpRight :size="14" class="ml-auto" /></button>
           </footer>

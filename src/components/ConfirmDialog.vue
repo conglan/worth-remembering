@@ -16,7 +16,7 @@ const emit = defineEmits<{ cancel: []; confirm: [] }>()
   <Teleport to="body">
     <Transition name="modal">
       <div v-if="open" class="fixed inset-0 z-[90] flex items-center justify-center bg-[#17261d]/35 p-5 backdrop-blur-[3px]" @click.self="!loading && emit('cancel')">
-        <div class="modal-panel w-full max-w-[400px] rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" :aria-label="title">
+        <div class="modal-panel dialog-panel w-full max-w-[400px] overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl" role="alertdialog" aria-modal="true" :aria-label="title">
           <div class="flex items-start justify-between">
             <span class="flex size-10 items-center justify-center rounded-xl" :class="danger ? 'bg-[#fbefec] text-[#ae5c4e]' : 'bg-[#edf2e9] text-forest'"><AlertTriangle :size="20" /></span>
             <button class="icon-button -mt-1 -mr-2" :disabled="loading" aria-label="关闭" @click="emit('cancel')"><X :size="18" /></button>

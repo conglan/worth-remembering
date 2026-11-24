@@ -3,7 +3,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import MobileApp from './mobile/MobileApp.vue'
 import { mobileRouter } from './mobile/router'
-import { isMobileDevice } from './mobile/device'
+import { isMobileDevice, syncSafeAreaInsets } from './mobile/device'
 import { router } from './router'
 import './style.css'
 
@@ -13,6 +13,12 @@ const app = createApp(mobile ? MobileApp : App)
 app.use(pinia)
 app.use(mobile ? mobileRouter : router)
 app.mount('#app')
+
+if (mobile) {
+  document.body.classList.add('mobile-shell')
+  syncSafeAreaInsets()
+  window.addEventListener('orientationchange', () => window.setTimeout(syncSafeAreaInsets, 200))
+}
 
 // 注册 Service Worker（PWA 离线支持）
 if ('serviceWorker' in navigator && import.meta.env.PROD) {

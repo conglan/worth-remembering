@@ -1,110 +1,13 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { CalendarDays, Check, ChevronDown, ImagePlus, LoaderCircle, MapPin, Pencil, Trash2, Upload, X } from 'lucide-vue-next'
-import { useAssetStore } from '../stores/assets'
 import { useUiStore } from '../stores/ui'
 import AssetImage from './AssetImage.vue'
-import { formatMoney, getDailyCost, getUsageDays, todayISO } from '../lib/asset'
-import { CURRENCIES, type AssetDraft } from '../lib/types'
+import { useAssetDraftForm } from '../composables/useAssetDraftForm'
+import { formatMoney, todayISO } from '../lib/asset'
+import { CURRENCIES } from '../lib/types'
 
-const store = useAssetStore()
 const ui = useUiStore()
-const fileInput = ref<HTMLInputElement>()
-const saving = ref(false)
-const imageError = ref('')
-const errors = reactive<Record<string, string>>({})
-
-function emptyDraft(): AssetDraft {
-  return {
-    brand: '', name: '', image: null, price: 0, currency: 'CNY', purchaseDate: todayISO(), purchaseLocation: '',
-    retired: false, retirementDate: null, sold: false, salePrice: null, saleCurrency: 'CNY', saleNote: '', note: '',
-  }
-}
-const draft = reactive<AssetDraft>(emptyDraft())
-const editing = computed(() => ui.editingId ? store.assets.find((asset) => asset.id === ui.editingId) : null)
-const preview = computed(() => ({ ...draft, id: 'preview', createdAt: '', updatedAt: '' }))
-const validPurchaseDate = computed(() => /^\d{4}-\d{2}-\d{2}$/.test(draft.purchaseDate))
-const usageDays = computed(() => validPurchaseDate.value ? getUsageDays(preview.value) : 0)
-const dailyCost = computed(() => validPurchaseDate.value && draft.price > 0 ? getDailyCost(preview.value) : 0)
-
-function reset() {
-  Object.assign(draft, editing.value ? {
-    brand: editing.value.brand, name: editing.value.name, image: editing.value.image, price: editing.value.price,
-    currency: editing.value.currency, purchaseDate: editing.value.purchaseDate, purchaseLocation: editing.value.purchaseLocation,
-    retired: editing.value.retired, retirementDate: editing.value.retirementDate, sold: editing.value.sold,
-    salePrice: editing.value.salePrice, saleCurrency: editing.value.saleCurrency, saleNote: editing.value.saleNote, note: editing.value.note,
-  } : emptyDraft())
-  Object.keys(errors).forEach((key) => delete errors[key])
-  imageError.value = ''
-}
-
-watch(() => ui.formOpen, (open) => {
-  if (open) reset()
-  document.body.style.overflow = open ? 'hidden' : ''
-})
-watch(() => draft.retired, (retired) => {
-  if (retired && !draft.retirementDate) draft.retirementDate = todayISO()
-  if (!retired) { draft.retirementDate = null; draft.sold = false; draft.salePrice = null; draft.saleNote = '' }
-})
-
-async function compressImage(file: File): Promise<string> {
-  const source = await new Promise<string>((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(String(reader.result))
-    reader.onerror = () => reject(new Error('图片读取失败，请重试。'))
-    reader.readAsDataURL(file)
-  })
-  const image = await new Promise<HTMLImageElement>((resolve, reject) => {
-    const element = new Image()
-    element.onload = () => resolve(element)
-    element.onerror = () => reject(new Error('无法识别这张图片。'))
-    element.src = source
-  })
-  const scale = Math.min(1, 1200 / Math.max(image.naturalWidth, image.naturalHeight))
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.round(image.naturalWidth * scale)
-  canvas.height = Math.round(image.naturalHeight * scale)
-  canvas.getContext('2d')?.drawImage(image, 0, 0, canvas.width, canvas.height)
-  return canvas.toDataURL('image/webp', 0.84)
-}
-
-async function handleFile(file?: File) {
-  imageError.value = ''
-  if (!file) return
-  if (!file.type.startsWith('image/')) { imageError.value = '请选择 JPG、PNG 或 WebP 图片。'; return }
-  if (file.size > 10 * 1024 * 1024) { imageError.value = '图片不能超过 10MB。'; return }
-  try { draft.image = await compressImage(file) }
-  catch (error) { imageError.value = error instanceof Error ? error.message : '图片处理失败。' }
-}
-
-function validate(): boolean {
-  Object.keys(errors).forEach((key) => delete errors[key])
-  if (!draft.brand.trim()) errors.brand = '请填写品牌'
-  if (!draft.name.trim()) errors.name = '请填写产品名称'
-  if (!Number.isFinite(draft.price) || draft.price <= 0) errors.price = '请输入大于 0 的购入价格'
-  if (!draft.purchaseDate) errors.purchaseDate = '请选择购入日期'
-  if (draft.retired && !draft.retirementDate) errors.retirementDate = '请选择退役日期'
-  if (draft.retired && draft.retirementDate && draft.retirementDate < draft.purchaseDate) errors.retirementDate = '退役日期不能早于购入日期'
-  if (draft.salePrice !== null && (!Number.isFinite(draft.salePrice) || draft.salePrice < 0)) errors.salePrice = '出售价格不能小于 0'
-  return Object.keys(errors).length === 0
-}
-
-async function submit() {
-  if (!validate()) return
-  saving.value = true
-  try {
-    const normalized: AssetDraft = { ...draft, brand: draft.brand.trim(), name: draft.name.trim(), purchaseLocation: draft.purchaseLocation.trim(), note: draft.note.trim(), saleNote: draft.saleNote.trim() }
-    await store.save(normalized, editing.value?.id)
-    ui.toast(editing.value ? '资产信息已更新' : '新资产已加入你的生活档案')
-    ui.closeForm()
-  } catch (error) {
-    ui.toast(error instanceof Error ? error.message : '保存失败，请稍后重试', 'error')
-  } finally { saving.value = false }
-}
-
-function onKeydown(event: KeyboardEvent) { if (event.key === 'Escape' && ui.formOpen && !saving.value) ui.closeForm() }
-onMounted(() => window.addEventListener('keydown', onKeydown))
-onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); document.body.style.overflow = '' })
+const { draft, editing, preview, errors, imageError, saving, fileInput, usageDays, dailyCost, handleFile, submit } = useAssetDraftForm()
 </script>
 
 <template>
@@ -112,7 +15,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); docume
     <Transition name="modal">
       <div v-if="ui.formOpen" class="fixed inset-0 z-[60] flex items-center justify-center bg-[#17261d]/40 p-0 backdrop-blur-[4px] md:p-6" @click.self="!saving && ui.closeForm()">
         <div class="modal-panel flex max-h-[92dvh] w-full max-w-[760px] flex-col overflow-hidden rounded-[22px] bg-white shadow-2xl" role="dialog" aria-modal="true" :aria-label="editing ? '编辑资产' : '记录新资产'">
-          <header class="flex shrink-0 items-start justify-between border-b border-line px-6 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-5 sm:px-8">
+          <header class="flex shrink-0 items-start justify-between border-b border-line px-6 pt-[calc(1.25rem+var(--safe-top))] pb-5 sm:px-8">
             <div>
               <div class="eyebrow mb-1.5">{{ editing ? 'EDIT ASSET' : 'NEW ASSET' }}</div>
               <h2 class="text-xl font-semibold tracking-tight">{{ editing ? '编辑资产' : '记录一件值得的物品' }}</h2>
@@ -171,7 +74,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); docume
               </section>
             </div>
 
-            <footer class="flex shrink-0 flex-col gap-4 border-t border-line bg-[#fcfcfa] px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <footer class="flex shrink-0 flex-col gap-4 border-t border-line bg-[#fcfcfa] px-6 pt-4 pb-[calc(1rem+var(--safe-bottom))] sm:flex-row sm:items-center sm:justify-between sm:px-8">
               <div class="flex items-center gap-5 text-[11px] text-[#8e9789]">
                 <span>预计使用 <strong class="ml-1 font-semibold text-[#4b574c] tabular">{{ usageDays }} 天</strong></span>
                 <span class="h-4 w-px bg-line" />
