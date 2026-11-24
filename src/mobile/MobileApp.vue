@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { nextTick, onMounted, watch } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import { Boxes, ChartNoAxesCombined, CheckCircle2, CircleAlert, Database, House, Info, LogOut, X } from 'lucide-vue-next'
 import AuthView from '../views/AuthView.vue'
@@ -27,6 +27,20 @@ onMounted(async () => {
   catch (error) { ui.toast(error instanceof Error ? error.message : '账号状态加载失败', 'error') }
 })
 
+/**
+ * 首屏渲染完成后强制重建一次合成图层。
+ * iOS/WebKit 首帧会把顶栏和滚动内容混在一起采样，表现为顶部一层灰，
+ * 正常交互一次（比如打开浮层）后才消失；这里主动抖一帧，把异常状态提前修掉。
+ */
+async function forceLayerRebuild() {
+  await nextTick()
+  const kick = document.createElement('div')
+  kick.setAttribute('aria-hidden', 'true')
+  kick.style.cssText = 'position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.01;backdrop-filter:blur(0px)'
+  document.body.appendChild(kick)
+  requestAnimationFrame(() => requestAnimationFrame(() => kick.remove()))
+}
+
 watch(() => auth.currentUser?.id, async (id) => {
   ui.closeForm()
   ui.detailsId = null
@@ -35,6 +49,7 @@ watch(() => auth.currentUser?.id, async (id) => {
   if (route.meta.admin && !auth.isAdmin) await router.replace({ name: 'dashboard' })
   try { await assetStore.initialize() }
   catch (error) { ui.toast(error instanceof Error ? error.message : '数据加载失败', 'error') }
+  await forceLayerRebuild()
 })
 
 async function logout() {
@@ -47,7 +62,8 @@ async function logout() {
   <div v-if="!auth.initialized" class="flex h-dvh items-center justify-center bg-canvas text-forest"><span class="text-sm">正在打开值得记…</span></div>
   <AuthView v-else-if="!auth.currentUser" />
   <div v-else class="relative flex h-dvh flex-col overflow-hidden bg-canvas">
-    <!-- transform:translateZ(0) 让顶栏自成一个合成层，避开 iOS 首次渲染把顶栏和滚动内容混在一起采样的糊层问题 -->
+    <!-- 顶栏与页面同色且 100% 实心：半透明时滚动内容会透出来，看起来像蒙了一层灰；
+         translateZ(0) 让它自成一个合成层，避开首帧和滚动内容一起被采样。 -->
     <header class="z-30 flex h-[calc(3.5rem+var(--safe-top))] shrink-0 items-center justify-between border-b border-[#eceee7] bg-canvas px-5 pt-[var(--safe-top)] [transform:translateZ(0)]">
       <div class="flex items-center gap-3">
         <span class="flex size-9 items-center justify-center rounded-xl bg-forest text-sm font-semibold text-white">值</span>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'worth-remembering-v1.0.4'
+const CACHE_NAME = 'worth-remembering-v1.0.6'
 const APP_SHELL = ['./', './index.html', './manifest.json']
 
 self.addEventListener('install', (event) => {
