@@ -1,4 +1,5 @@
 export function isMobileDevice(): boolean {
+  if (new URLSearchParams(window.location.search).has('mobile-preview')) return true // TEMP-PREVIEW
   const coarsePointer = window.matchMedia('(pointer: coarse)').matches
   const narrow = window.matchMedia('(max-width: 820px)').matches
   return coarsePointer && narrow

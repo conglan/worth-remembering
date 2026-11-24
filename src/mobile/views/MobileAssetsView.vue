@@ -84,21 +84,21 @@ function clearFilters() {
           <span class="h-px flex-1 bg-[#e6e9e0]" />
         </div>
         <div class="grid grid-cols-2 gap-3">
-          <article v-for="asset in group.assets" :key="asset.id" class="group flex flex-col rounded-[22px] border border-[#eceee6] bg-white p-3 shadow-[0_2px_10px_rgba(24,42,30,0.035)] transition duration-200 active:scale-[0.975]" @click="ui.openDetails(asset.id)">
-            <div class="flex items-start justify-between gap-2">
-              <AssetImage :asset="asset" class="size-[60px] rounded-[15px]" fit="cover" />
-              <span class="mt-0.5 inline-flex shrink-0 items-center gap-1 text-[9px] font-medium text-[#7d8a7b]"><span class="size-1.5 rounded-full" :class="STATUS_DOT[getAssetStatus(asset)]" />{{ statusLabel(getAssetStatus(asset)) }}</span>
+          <article v-for="asset in group.assets" :key="asset.id" class="group flex flex-col overflow-hidden rounded-[22px] border border-[#eceee6] bg-white shadow-[0_2px_10px_rgba(24,42,30,0.035)] transition duration-200 active:scale-[0.975]" @click="ui.openDetails(asset.id)">
+            <div class="relative">
+              <AssetImage :asset="asset" class="aspect-[1.32] w-full" rounded="rounded-none" />
+              <span class="absolute top-2 right-2 inline-flex items-center gap-1 rounded-full bg-white/85 px-1.5 py-1 text-[9px] font-medium text-[#6f7c6d] shadow-sm backdrop-blur-sm"><span class="size-1.5 rounded-full" :class="STATUS_DOT[getAssetStatus(asset)]" />{{ statusLabel(getAssetStatus(asset)) }}</span>
             </div>
-            <div class="mt-2.5 min-w-0">
-              <div class="truncate text-[10px] font-medium text-[#9aa195]">{{ asset.brand }}</div>
+            <div class="flex flex-1 flex-col p-2.5">
+              <div class="truncate text-[9px] font-medium tracking-[0.06em] text-[#9aa195]">{{ asset.brand }}</div>
               <h2 class="mt-0.5 truncate text-[13px] font-semibold text-[#2f3a31]">{{ asset.name }}</h2>
-            </div>
-            <div class="mt-2.5 flex items-end justify-between gap-1.5 border-t border-[#f2f4ef] pt-2">
-              <div class="min-w-0">
-                <div class="truncate text-[15px] leading-none font-semibold text-forest tabular">{{ formatMoney(getDailyCost(asset), asset.currency, true) }}</div>
-                <div class="mt-1 text-[9px] text-[#a6ada2]">每日成本</div>
+              <div class="mt-auto flex items-end justify-between gap-1.5 pt-2.5">
+                <div class="min-w-0">
+                  <div class="truncate text-[15px] leading-none font-semibold text-forest tabular">{{ formatMoney(getDailyCost(asset), asset.currency, true) }}</div>
+                  <div class="mt-1 text-[9px] text-[#a6ada2]">每日成本</div>
+                </div>
+                <div class="shrink-0 pb-0.5 text-[9px] text-[#a6ada2] tabular">{{ getUsageDays(asset) }} 天</div>
               </div>
-              <div class="shrink-0 pb-0.5 text-[9px] text-[#a6ada2] tabular">{{ getUsageDays(asset) }} 天</div>
             </div>
           </article>
         </div>

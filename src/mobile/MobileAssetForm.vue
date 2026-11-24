@@ -45,9 +45,9 @@ async function save() {
 <template>
   <Teleport to="body">
     <Transition name="sheet">
-      <div v-if="ui.formOpen" class="fixed inset-0 z-[60] bg-[#14231a]/40" @click.self="close">
+      <div v-if="ui.formOpen" class="sheet-scrim fixed inset-0 z-[60]" @click.self="close">
         <section class="sheet-panel" role="dialog" aria-modal="true" :aria-label="editing ? '编辑资产' : '添加资产'">
-          <header class="relative z-20 flex h-14 shrink-0 items-center justify-between gap-3 bg-[#f1f3ee]/90 px-4 backdrop-blur-md">
+          <header class="relative z-20 flex h-14 shrink-0 items-center justify-between gap-3 bg-[#f1f3ee] px-4 transition-shadow duration-200" :class="stuck ? 'shadow-[0_1px_0_#e4e8df]' : ''">
             <button type="button" class="flex size-9 items-center justify-center rounded-full bg-white text-[#3d4840] shadow-sm transition active:scale-95" aria-label="关闭表单" @click="close"><X :size="18" :stroke-width="2.5" /></button>
             <h2 class="text-[15px] font-semibold text-[#26312a] transition-opacity duration-200" :class="stuck ? 'opacity-100' : 'opacity-0'">{{ editing ? '编辑资产' : '添加资产' }}</h2>
             <button type="button" class="flex size-9 items-center justify-center rounded-full shadow-sm transition active:scale-95 disabled:opacity-60" :class="canSave ? 'bg-forest text-white' : 'bg-[#dde1d7] text-white'" :disabled="saving" aria-label="保存资产" @click="save">

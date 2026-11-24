@@ -94,6 +94,11 @@ input[type='password']::-ms-clear { display: none; }
     box-shadow: 0 -10px 40px rgb(20 36 26 / 0.18);
   }
 
+    /* 表单遮罩：顶部淡、底部深，避免卡片上沿上方出现一条生硬的深色带 */
+    .sheet-scrim {
+      background: linear-gradient(180deg, rgb(20 35 26 / 0.1) 0%, rgb(20 35 26 / 0.22) 22%, rgb(20 36 26 / 0.42) 100%);
+    }
+  
   .sheet-card {
     @apply overflow-hidden rounded-[22px] bg-white;
   }
