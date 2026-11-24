@@ -62,14 +62,15 @@ async function logout() {
   <div v-if="!auth.initialized" class="flex h-dvh items-center justify-center bg-canvas text-forest"><span class="text-sm">正在打开值得记…</span></div>
   <AuthView v-else-if="!auth.currentUser" />
   <div v-else class="relative flex h-dvh flex-col overflow-hidden bg-canvas">
-    <!-- 顶栏与页面同色且 100% 实心：半透明时滚动内容会透出来，看起来像蒙了一层灰；
+    <!-- 顶栏与页面同色且 100% 实心：半透明时滚动内容会透出来，看起来像蒙了一层灰。
+         mobile-header 类用于 style.css 里单独处理 PWA 全屏模式的配色；
          translateZ(0) 让它自成一个合成层，避开首帧和滚动内容一起被采样。 -->
-    <header class="z-30 flex h-[calc(3.5rem+var(--safe-top))] shrink-0 items-center justify-between border-b border-[#eceee7] bg-canvas px-5 pt-[var(--safe-top)] [transform:translateZ(0)]">
+    <header class="mobile-header z-30 flex h-[calc(3.5rem+var(--safe-top))] shrink-0 items-center justify-between border-b border-[#eceee7] bg-canvas px-5 pt-[var(--safe-top)] [transform:translateZ(0)]">
       <div class="flex items-center gap-3">
-        <span class="flex size-9 items-center justify-center rounded-xl bg-forest text-sm font-semibold text-white">值</span>
+        <span class="header-logo flex size-9 items-center justify-center rounded-xl bg-forest text-sm font-semibold text-white">值</span>
         <span class="text-lg font-semibold tracking-wide">值得记</span>
       </div>
-      <button class="flex size-9 items-center justify-center rounded-lg text-[#737b72] active:bg-[#eef1eb]" aria-label="退出登录" @click="logout"><LogOut :size="18" /></button>
+      <button class="header-logout flex size-9 items-center justify-center rounded-lg text-[#737b72] active:bg-[#eef1eb]" aria-label="退出登录" @click="logout"><LogOut :size="18" /></button>
     </header>
 
     <main class="min-h-0 flex-1 overflow-y-auto overscroll-contain pb-[calc(5.5rem+var(--safe-bottom))]">
