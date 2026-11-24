@@ -47,7 +47,8 @@ async function logout() {
   <div v-if="!auth.initialized" class="flex h-dvh items-center justify-center bg-canvas text-forest"><span class="text-sm">正在打开值得记…</span></div>
   <AuthView v-else-if="!auth.currentUser" />
   <div v-else class="relative flex h-dvh flex-col overflow-hidden bg-canvas">
-    <header class="z-30 flex h-[calc(3.5rem+var(--safe-top))] shrink-0 items-center justify-between border-b border-line bg-[#f5f6f2]/95 px-5 pt-[var(--safe-top)]">
+    <!-- transform:translateZ(0) 让顶栏自成一个合成层，避开 iOS 首次渲染把顶栏和滚动内容混在一起采样的糊层问题 -->
+    <header class="z-30 flex h-[calc(3.5rem+var(--safe-top))] shrink-0 items-center justify-between border-b border-[#eceee7] bg-canvas px-5 pt-[var(--safe-top)] [transform:translateZ(0)]">
       <div class="flex items-center gap-3">
         <span class="flex size-9 items-center justify-center rounded-xl bg-forest text-sm font-semibold text-white">值</span>
         <span class="text-lg font-semibold tracking-wide">值得记</span>

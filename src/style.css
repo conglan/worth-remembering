@@ -148,9 +148,14 @@ input[type='password']::-ms-clear { display: none; }
 
 .tabular { font-variant-numeric: tabular-nums; }
 
-.page-enter-active { transition: opacity 180ms ease, transform 240ms ease; }
+/**
+ * 页面切换只做淡入：不用 translateY。
+ * 位移会把 main 里的整页内容提升为独立合成层，iOS/WebKit 首次渲染时容易把顶栏区域采样错，
+ * 表现就是「刚进页面顶部像蒙了一层灰，打开过一次浮层后才恢复」。
+ */
+.page-enter-active { transition: opacity 200ms ease; }
 .page-leave-active { transition: opacity 120ms ease; }
-.page-enter-from { opacity: 0; transform: translateY(6px); }
+.page-enter-from { opacity: 0; }
 .page-leave-to { opacity: 0; }
 
 .modal-enter-active, .modal-leave-active { transition: opacity 200ms ease; }
