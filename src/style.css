@@ -39,6 +39,15 @@ input[type='password']::-ms-clear { display: none; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #ced3c9; border-radius: 10px; }
 
+/* 触屏设备隐藏滚动条，保留滚动能力 */
+@media (pointer: coarse) {
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  *::-webkit-scrollbar { width: 0; height: 0; display: none; }
+}
+
 @layer components {
   .panel {
     @apply rounded-2xl border border-line bg-white;

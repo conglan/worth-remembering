@@ -112,7 +112,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); docume
     <Transition name="modal">
       <div v-if="ui.formOpen" class="fixed inset-0 z-[60] flex items-center justify-center bg-[#17261d]/40 p-0 backdrop-blur-[4px] md:p-6" @click.self="!saving && ui.closeForm()">
         <div class="modal-panel flex max-h-[92dvh] w-full max-w-[760px] flex-col overflow-hidden rounded-[22px] bg-white shadow-2xl" role="dialog" aria-modal="true" :aria-label="editing ? '编辑资产' : '记录新资产'">
-          <header class="flex shrink-0 items-start justify-between border-b border-line px-6 py-5 sm:px-8">
+          <header class="flex shrink-0 items-start justify-between border-b border-line px-6 pt-[calc(1.25rem+env(safe-area-inset-top))] pb-5 sm:px-8">
             <div>
               <div class="eyebrow mb-1.5">{{ editing ? 'EDIT ASSET' : 'NEW ASSET' }}</div>
               <h2 class="text-xl font-semibold tracking-tight">{{ editing ? '编辑资产' : '记录一件值得的物品' }}</h2>
@@ -171,7 +171,7 @@ onBeforeUnmount(() => { window.removeEventListener('keydown', onKeydown); docume
               </section>
             </div>
 
-            <footer class="flex shrink-0 flex-col gap-4 border-t border-line bg-[#fcfcfa] px-6 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-8">
+            <footer class="flex shrink-0 flex-col gap-4 border-t border-line bg-[#fcfcfa] px-6 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:flex-row sm:items-center sm:justify-between sm:px-8">
               <div class="flex items-center gap-5 text-[11px] text-[#8e9789]">
                 <span>预计使用 <strong class="ml-1 font-semibold text-[#4b574c] tabular">{{ usageDays }} 天</strong></span>
                 <span class="h-4 w-px bg-line" />

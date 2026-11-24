@@ -39,7 +39,7 @@ watch(() => auth.currentUser?.id, async (id) => {
   <div v-else class="min-h-screen bg-canvas">
     <SidebarNav class="hidden md:flex" />
 
-    <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-line bg-[#f5f6f2]/95 px-5 backdrop-blur md:hidden">
+    <header class="sticky top-0 z-30 flex h-[calc(4rem+env(safe-area-inset-top))] items-center justify-between border-b border-line bg-[#f5f6f2]/95 px-5 pt-[env(safe-area-inset-top)] backdrop-blur md:hidden">
       <div class="flex items-center gap-3"><span class="flex size-9 items-center justify-center rounded-xl bg-forest text-sm font-semibold text-white">值</span><span class="text-lg font-semibold tracking-wide">值得记</span></div>
       <button class="icon-button" aria-label="打开导航" @click="ui.mobileNavOpen = true"><Menu :size="21" /></button>
     </header>
@@ -47,7 +47,7 @@ watch(() => auth.currentUser?.id, async (id) => {
     <Teleport to="body">
       <Transition name="modal">
         <div v-if="ui.mobileNavOpen" class="fixed inset-0 z-50 bg-[#15251c]/30 backdrop-blur-sm md:hidden" @click="ui.mobileNavOpen = false">
-          <div class="modal-panel h-full w-[280px]" @click.stop>
+          <div class="modal-panel h-full w-[280px] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]" @click.stop>
             <button class="icon-button absolute top-4 right-4 z-10" aria-label="关闭导航" @click="ui.mobileNavOpen = false"><X :size="20" /></button>
             <SidebarNav :collapsible="false" @navigate="ui.mobileNavOpen = false" />
           </div>
@@ -64,7 +64,7 @@ watch(() => auth.currentUser?.id, async (id) => {
   </div>
 
   <Teleport to="body">
-    <div class="pointer-events-none fixed top-5 right-5 z-[100] flex w-[min(380px,calc(100vw-40px))] flex-col gap-2">
+    <div class="pointer-events-none fixed top-[calc(1.25rem+env(safe-area-inset-top))] right-5 z-[100] flex w-[min(380px,calc(100vw-40px))] flex-col gap-2">
       <TransitionGroup name="toast">
         <div v-for="item in ui.toasts" :key="item.id" class="pointer-events-auto flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-3 text-sm shadow-xl">
           <CheckCircle2 v-if="item.type === 'success'" :size="19" class="shrink-0 text-forest" />

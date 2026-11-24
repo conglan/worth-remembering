@@ -38,7 +38,7 @@ async function submit() {
 </script>
 
 <template>
-  <main class="grid min-h-screen bg-[#f4f6f1] lg:grid-cols-[minmax(360px,0.9fr)_minmax(520px,1.1fr)]">
+  <main class="grid min-h-dvh bg-[#f4f6f1] lg:grid-cols-[minmax(360px,0.9fr)_minmax(520px,1.1fr)]">
     <section class="relative hidden overflow-hidden bg-forest p-12 text-white lg:flex lg:flex-col lg:justify-between">
       <div class="absolute -top-32 -right-32 size-[420px] rounded-full border border-white/10" />
       <div class="absolute -right-16 -bottom-40 size-[520px] rounded-full border border-white/10" />
@@ -58,7 +58,7 @@ async function submit() {
       <p class="relative text-[10px] tracking-wide text-white/35">每一件值得，都有迹可循。</p>
     </section>
 
-    <section class="flex items-center justify-center px-5 py-10 sm:px-10">
+    <section class="flex items-center justify-center px-5 pt-[calc(2.5rem+env(safe-area-inset-top))] pb-[calc(2.5rem+env(safe-area-inset-bottom))] sm:px-10">
       <div class="w-full max-w-[430px]">
         <div class="mb-8 flex items-center gap-3 lg:hidden"><span class="flex size-10 items-center justify-center rounded-xl bg-forest text-white"><Sparkles :size="19" /></span><span class="text-xl font-semibold tracking-[0.12em]">值得记</span></div>
         <div class="eyebrow mb-3">{{ registering ? 'CREATE YOUR SPACE' : 'WELCOME BACK' }}</div>
